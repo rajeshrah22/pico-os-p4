@@ -59,19 +59,14 @@ __bad_interrupt:
 	b 1b
 .size __bad_interrupt, . - __bad_interrupt
 
-.macro vector_stub number
+.macro __vector_X number
 	.weak __vector_\number
 	.set __vector_\number, __bad_interrupt
 .endm
 
-/* core vectors */
-.irp vect,2,3,11,14,15
-	.weak __vector_\vect
-	.set __vector_\vect, __bad_interrupt
-.endr
-
-/* external vectors */
 .altmacro
-.rept 32
-	vector_stub %(16+\+)
+.set i, 2
+.rept 48 - 2
+	__vector_X %i
+	.set i, i+1
 .endr

@@ -31,6 +31,7 @@ clean:
 	$(MAKE) -C app_1 clean
 	$(MAKE) -C app_2 clean
 	-$(RM) $(ELF) $(BIN)
+	-$(RM) -r $(DEBUGDIR)
 
 symbols: $(ELF)
 	$(MKDIR) $(DEBUGDIR)

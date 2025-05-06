@@ -80,7 +80,25 @@ entry_from_user:
 #if __ARM_ARCH == 7
 	stmdb r0!, {r4-r11}
 #elif __ARM_ARCH == 6
-#	warning "save r4 to r11 into the process stack"
+	/* Done this way to work around thumb encoding limitations */
+	subs r0, #28
+	mov r1, r10
+	str r1, [r0]
+	mov r1, r9
+	str r1, [r0, #4]
+	mov r1, r8
+	str r1, [r0, #8]
+	mov r1, r7
+	str r1, [r0, #16]
+	mov r1, r6
+	str r1, [r0, #20]
+	mov r1, r5
+	str r1, [r0, #24]
+	mov r1, r4
+	str r1, [r0, #28]
+	subs r0, #4
+	mov r1, r11
+	str r1, [r0]
 #else
 #	error "architecture not supported"
 #endif
@@ -107,7 +125,27 @@ return_to_user:
 	/* load general purpose registers */
 	ldmia r0!, {r4-r11}
 #elif __ARM_ARCH == 6
-#	warning "restore registers r4 to r11 from the process stack"
+	/* Done this way to work around thumb encoding limitations */
+	/* Micheal (Ascenzi) showed me a better way but i'm lazy */
+	ldr r1, [r0]
+	mov r4, r1
+	str r1, [r0, #4]
+	mov r5, r1
+	str r1, [r0, #8]
+	mov r6, r1
+	str r1, [r0, #16]
+	mov r7, r1
+	str r1, [r0, #20]
+	mov r8, r1
+	str r1, [r0, #24]
+	mov r9, r1
+	str r1, [r0, #28]
+	mov r10, r1
+	subs r0, #4
+	mov r4, r1
+	str r1, [r0]
+	mov r11, r1
+	adds r0, #32
 #else
 #	error "architecture not supported"
 #endif
