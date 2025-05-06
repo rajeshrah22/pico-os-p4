@@ -1,0 +1,35 @@
+Build
+========
+To build the system kernel (supervisor), issue
+
+$ make
+
+The kernel.elf file will be generated.
+
+Directory Structure
+======================
+
+.
+|
++- asm_core
+|	Core architecture files
++- kernel
+|	Main kernel C files
++- lds
+|	Linker scripts for the kernel and external symbol definitions
++- lib
+|	Core library files
++- periph
+|	Peripheral drivers
++- syscalls
+	System call implementations
+
+Limitations
+=============
+- The kernel can not run standalone.
+
+- There is no idle task.
+
+- Exactly two processes are supported in the process queue.
+
+- There is no priority scheduling.

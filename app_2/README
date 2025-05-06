@@ -1,0 +1,7 @@
+Demo application 2
+=====================
+Makes system calls to a vulnerable kernel service. For simplicity, we hardcode
+the parameters to the system call. In a more complex system, the system call
+parameters can be attacker manipulated.
+
+System calls result in the setup of the FPB registers.

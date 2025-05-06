@@ -1,0 +1,5 @@
+Demo application 1
+=====================
+This application contains a buffer. For simplicity, we initialize the buffer in
+the application. In practice, this buffer can be attacker controlled, e.g. by
+providing inputs to the application.
