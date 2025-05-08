@@ -16,6 +16,8 @@
  *	6 - user data
  */
 
+extern unsigned int __data_start;
+
 void mpu_setup_user(struct task_struct* proc) {
 #if 0
 #	warning "Graduate students must implement this function"
@@ -23,19 +25,15 @@ void mpu_setup_user(struct task_struct* proc) {
 #endif
 
 	/* disable the MPU */
-	MPU.ctrl &= ~(MPU_REG_ENABLE);
+	mpu_disable();
+
 	/* set the region for the task being scheduled */
 	/* start with .text then .data */
-	MPU.rnr = 5;
-	MPU.rbar = (proc->text_start << 8);
-	MPU.rasr = MPU_ATTRIB_UCODE | MPU_REG_SIZE_16K;
-
-	MPU.rnr = 6;
-	MPU.rbar = (proc->text_start << 8);
-	MPU.rasr = MPU_ATTRIB_UDATA | MPU_REG_SiZE_16K;
+	mpu_set_region(5, proc->text_start, MPU_ATTRIB_UCODE | MPU_REG_SIZE_16K);
+	mpu_set_region(6, proc->data_start, MPU_ATTRIB_UDATA | MPU_REG_SIZE_16K);
 
 	/* enable the MPU again */
-	MPU.ctrl |= MPU_REG_ENABLE;
+	mpu_enable();
 }
 
 void mpu_setup_supervisor(void) {
@@ -49,25 +47,23 @@ void mpu_setup_supervisor(void) {
 	/* the supervisor should have access to all of SRAM */
 	/* yes, technically we could do some SMEP/SMAP thing here, but that is
 	 * overkill for this assignment :) */
-	MPU.ctrl &= ~(MPU_REG_ENABLE);
-	MPU.rnr = 2;
-	MPU.rbar = 0x10000000 << 8;  /* Kernel Base */
-	MPU.rasr = MPU_ATTRIB_SCODE | MPU_REG_SIZE_16K;
+	mpu_disable();
 
-	MPU.rnr = 6;
-	MPU.rbar = (proc->text_start << 8);
-	MPU.rasr = MPU_ATTRIB_UDATA | MPU_REG_SiZE_16K;
+	mpu_set_region(2, 0x10000000, MPU_ATTRIB_SCODE | MPU_REG_SIZE_2M);
+	mpu_set_region(3, __data_start, MPU_ATTRIB_SDATA | MPU_REG_SIZE_2M);
 
 	/* enable the MPU again */
-	MPU.ctrl |= MPU_REG_ENABLE;
+	mpu_enable();
 }
 
 void mpu_setup_periph(void) {
-#if 1
+#if 0
 #	warning "Graduate students must implement this function"
 #	warning "otherwise change the 1 above to a 0"
 #endif
-	/* all peripheral space should be only accessible to the supervisor */
+	mpu_disable();
+	mpu_set_region(4, 0x40000000, ATTRIB_PERIPH_AREA1);
+	mpu_enable();
 }
 
 

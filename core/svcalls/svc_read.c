@@ -3,6 +3,8 @@
 #include <syscall_list.h>
 #include <uart.h>
 
+int uart_getc();
+
 int svc_read(void* data, size_t len) {
 	char *str = (char *)data;
 	int c;

@@ -2,11 +2,10 @@
 #include <syscall_list.h>
 
 int svc_set_led(unsigned int state) {
-#	warning "must complete this function"
 	if(state) {
-		/* set LED on GP25 to high */
+		SIO.gpio_oe_set = (1u << 25);
 	} else {
-		/* set LED on GP25 to low */
+		SIO.gpio_oe_clr = (1u << 25);
 	}
 	return 0;
 }
